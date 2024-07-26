@@ -46,7 +46,7 @@ app.post("/check", (req, res) => {
     if(userIsAuthorised){
         res.sendFile(__dirname + "/public/secrete.html")
     }else{
-        res.sendFile(__dirname + "/public/home.html")
+      res.redirect("/") // res.sendFile(__dirname + "/public/home.html")
     }
    
 }) 
