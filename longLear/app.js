@@ -205,7 +205,7 @@ app.get("/json",(req,res)=>{
 
 // to get user input 
 
-
+// this will be what the user lets say in inputed , ":" means params
 app.get("/:word/echo", (req, res)=>{
     res.json({
         echo:req.params.word
@@ -213,7 +213,16 @@ app.get("/:word/echo", (req, res)=>{
   })
 
 
+  // this should be what will be output let say the user type ?first=firstname&last=lastname
   
+// note query is "?", 
+app.route("/name" ).get((req, res)=>{
+    // req.query.first= "paul";
+    // req.query.last = "fidelis"
+    res.json({name:` ${req.query.first} ${req.query.last}` });
+    
+  })
+
 
 module.exports = app;
 
