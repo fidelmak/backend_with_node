@@ -143,85 +143,184 @@
 
 
 
-let express = require('express');
-let app = express();
-const logger = (req,res,next)=>{
-         console.log(`${req.method} ${req.path} - ${req.ip}`);
-         next();
-       }
-app.use(logger);
+// let express = require('express');
+// let app = express();
+// const logger = (req,res,next)=>{
+//          console.log(`${req.method} ${req.path} - ${req.ip}`);
+//          next();
+//        }
+// app.use(logger);
 
 
 
 
-require('dotenv').config();
-const upperCase = process.env.MESSAGE_STYLE;
-//console.log(upperCase);
+// require('dotenv').config();
+// const upperCase = process.env.MESSAGE_STYLE;
+// //console.log(upperCase);
 
-// console.log("Hello World");
-const absolutePath = __dirname + '/views/index.html';
+// // console.log("Hello World");
+// const absolutePath = __dirname + '/views/index.html';
 
-// Serve static files from the "public" directory
+// // Serve static files from the "public" directory
 
-myStylePath=express.static(__dirname + '/public')
-app.use('/public',myStylePath);
-
-
+// myStylePath=express.static(__dirname + '/public')
+// app.use('/public',myStylePath);
 
 
 
-// routes 
 
-app.get('/now', function(req, res, next) {
-    req.time = new Date().toString()
+
+// // routes 
+
+// app.get('/now', function(req, res, next) {
+//     req.time = new Date().toString()
     
-    next();
-  }, function(req, res) {
-    res.json({"time": req.time});
-  });
+//     next();
+//   }, function(req, res) {
+//     res.json({"time": req.time});
+//   });
   
-///////
-app.get("/", (req, res) => {
-    // res.send("Hello Express");
-    res.sendFile(absolutePath);
-})
+// ///////
+// app.get("/", (req, res) => {
+//     // res.send("Hello Express");
+//     res.sendFile(absolutePath);
+// })
 
 
 
-app.get("/json",(req,res)=>{
-    let resultMessage="Hello json";
-    if (process.env.MESSAGE_STYLE==="uppercase"){
-      resultMessage=resultMessage.toUpperCase();
-    }
+// app.get("/json",(req,res)=>{
+//     let resultMessage="Hello json";
+//     if (process.env.MESSAGE_STYLE==="uppercase"){
+//       resultMessage=resultMessage.toUpperCase();
+//     }
    
-    res.json({"message": resultMessage});
+//     res.json({"message": resultMessage});
                              
-  });
+//   });
 
 
-////////////
+// ////////////
 
 
 
-// to get user input 
+// // to get user input 
 
-// this will be what the user lets say in inputed , ":" means params
-app.get("/:word/echo", (req, res)=>{
-    res.json({
-        echo:req.params.word
-    })
-  })
+// // this will be what the user lets say in inputed , ":" means params
+// app.get("/:word/echo", (req, res)=>{
+//     res.json({
+//         echo:req.params.word
+//     })
+//   })
 
 
-  // this should be what will be output let say the user type ?first=firstname&last=lastname
+//   // this should be what will be output let say the user type ?first=firstname&last=lastname
   
-// note query is "?", 
-app.route("/name" ).get((req, res)=>{
-    // req.query.first= "paul";
-    // req.query.last = "fidelis"
-    res.json({name:` ${req.query.first} ${req.query.last}` });
+// // note query is "?", 
+// app.route("/name" ).get((req, res)=>{
+//     // req.query.first= "paul";
+//     // req.query.last = "fidelis"
+//     res.json({name:` ${req.query.first} ${req.query.last}` });
     
+//   })
+
+
+
+  ////////// using a bodyParser
+
+  let express = require('express');
+  let app = express();
+  let bodyParser = require('body-parser')
+  
+  const logger = (req,res,next)=>{
+           console.log(`${req.method} ${req.path} - ${req.ip}`);
+           next();
+         }
+  app.use(logger);
+  app.use(bodyParser.urlencoded({ extended: true }));
+  
+  
+  
+  
+  require('dotenv').config();
+  const upperCase = process.env.MESSAGE_STYLE;
+  //console.log(upperCase);
+  
+  // console.log("Hello World");
+  const absolutePath = __dirname + '/views/index.html';
+  
+  // Serve static files from the "public" directory
+  
+  myStylePath=express.static(__dirname + '/public')
+  app.use('/public',myStylePath);
+  
+  
+  
+  
+  
+  // routes 
+  
+  app.get('/now', function(req, res, next) {
+      req.time = new Date().toString()
+      
+      next();
+    }, function(req, res) {
+      res.json({"time": req.time});
+    });
+    
+  ///////
+  app.get("/", (req, res) => {
+      // res.send("Hello Express");
+      res.sendFile(absolutePath);
   })
+  
+  
+  
+  app.get("/json",(req,res)=>{
+      let resultMessage="Hello json";
+      if (process.env.MESSAGE_STYLE==="uppercase"){
+        resultMessage=resultMessage.toUpperCase();
+      }
+     
+      res.json({"message": resultMessage});
+                               
+    });
+  
+  
+  // this will be what the user lets say in inputed , ":" means params
+    app.get("/:word/echo", (req, res)=>{
+      res.json({
+          echo:req.params.word
+      })
+    })
+  
+  // this should be what will be output let say the user type ?first=firstname&last=lastname
+    
+  // note query is "?", 
+  app.route("/name" ).get((req, res)=>{
+      // req.query.first= "paul";
+      // req.query.last = "fidelis"
+      res.json({name:`${ req.query.first } ${ req.query.last}` });
+      
+    })
+  
+ /////// getting data from Post request 
+
+
+ // using the request body 
+
+ app.set('view engine', 'ejs');
+
+app.post('/name', (req, res) => {
+    // Assuming req.body.first and req.body.last are sent in the POST request
+    const firstName = req.body.first;
+    const lastName = req.body.last;
+
+    // Render the output.ejs file and pass the name variable
+    res.render('output', { first: firstName, last: lastName });
+});
+
+
+
 
 
 module.exports = app;
