@@ -127,7 +127,7 @@ const personSchema = new mongoose.Schema({
     require: true
   },
   age: Number,
-  favoriteFoods: [{type: String,unique: true}]
+  favoriteFoods: [{type: String,unique: true}]//// you need to change this to [String ] to prevent duplicate
 })
 
 const Person = mongoose.model("Person",personSchema )
@@ -174,9 +174,23 @@ var createManyPeople = (arrayOfPeople, done) => {
 
 
 ////////
+
+
+///// to find a person by name 
 const findPeopleByName = (personName, done) => {
-  done(null /*, data*/);
-};
+    Person.find({name:personName},function(err, data) {
+       if (err) {
+         return done(err);
+       }else {done(null, data);}
+       
+     
+       
+   
+     }
+     
+   
+    )
+   };
 
 const findOneByFood = (food, done) => {
   done(null /*, data*/);
